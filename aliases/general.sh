@@ -8,6 +8,9 @@ alias sba='source ~/.bash_aliases'
 alias eba='vim ~/.bash_aliases'
 alias essh='vim ~/.ssh/config'
 alias rp='realpath'
+alias sl='ls'  # I always misspell this, so...
+alias ls='ls --color=auto'
+alias l='ls -CF'
 
 # Conda
 alias ca='conda activate'
@@ -31,3 +34,9 @@ alias tmuxk='tmux kill-session -t'
 export DEFAULT_REMOTE_HOST=''
 export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
 alias dscp='python $MY_ENV_REPO/my_useful/default_scp.py'
+alias countint='python $MY_ENV_REPO/my_useful/count.py'
+alias repall='python $MY_ENV_REPO/my_useful/replace_all_in_file.py'
+alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
+cprp() {
+    realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
+}
