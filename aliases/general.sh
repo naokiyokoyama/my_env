@@ -29,4 +29,5 @@ alias tmuxk='tmux kill-session -t'
 
 # my_useful scripts
 export DEFAULT_REMOTE_HOST=''
-export MY_USEFUL_SCRIPTS_DIR='<MY_USEFUL_SCRIPTS_DIR>'  # filled in by add_aliases.py
+export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
+alias dscp='python $MY_ENV_REPO/my_useful/default_scp.py'
