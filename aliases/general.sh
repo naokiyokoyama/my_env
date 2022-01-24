@@ -30,6 +30,9 @@ alias tmuxa='tmux a -t'
 alias tmuxl='tmux ls'
 alias tmuxk='tmux kill-session -t'
 
+# Other
+alias tb='tensorboard --logdir'
+
 # my_useful scripts
 export DEFAULT_REMOTE_HOST=''
 export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
