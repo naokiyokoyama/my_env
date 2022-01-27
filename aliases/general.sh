@@ -47,3 +47,4 @@ alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
 cprp() {
     realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
 }
+. $MY_ENV_REPO/my_useful/z.sh
