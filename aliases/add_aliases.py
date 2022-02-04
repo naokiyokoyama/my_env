@@ -41,7 +41,7 @@ this_dir = osp.dirname(osp.abspath(__file__))
 general_aliases = osp.join(this_dir, "general.sh")
 with open(general_aliases) as f:
     added_aliases += f.read() + "\n"
-print(f"Loading general aliases from '{general_aliases}'..")
+print(f"Loading general aliases from '{general_aliases}'...")
 
 # Add OS-specific aliases
 if op_sys == "ubuntu":
@@ -64,7 +64,7 @@ else:  # macOS
 # Load OS-specific aliases from this repo
 with open(os_aliases) as f:
     added_aliases += f.read() + "\n"
-print(f"Loading OS-specific aliases from '{os_aliases}'..")
+print(f"Loading OS-specific aliases from '{os_aliases}'...")
 
 # Replace environment variable with valid path to this repo
 my_env_repo = osp.dirname(this_dir)
