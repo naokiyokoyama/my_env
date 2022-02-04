@@ -69,6 +69,8 @@ print(f"Loading OS-specific aliases from '{os_aliases}'..")
 # Replace environment variable with valid path to this repo
 my_env_repo = osp.dirname(this_dir)
 added_aliases = added_aliases.replace("<MY_ENV_REPO>", my_env_repo)
+default_remote_host = input("Specify default remote host (default=''): ")
+added_aliases = added_aliases.replace("<DEFAULT_REMOTE_HOST>", default_remote_host)
 added_aliases += footer
 
 # Prepend added aliases to existing ones, if there are existing ones

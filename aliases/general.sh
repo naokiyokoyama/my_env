@@ -12,13 +12,14 @@ alias eba='vim ~/.bash_aliases'
 alias essh='vim ~/.ssh/config'
 alias rp='realpath'
 alias sl='ls'  # I always misspell this, so...
-alias ls='ls -G'  # color
-alias l='ls -CF'  # color, show dirs
+lsgrep() {
+  ls | grep $1
+}
 
 # Conda
 alias ca='conda activate'
 alias condad='conda deactivate'
-alias condac='conda create -n '
+alias mambac='conda create -n '
 
 # Git
 alias gita='git add'
@@ -37,7 +38,7 @@ alias tmuxk='tmux kill-session -t'
 alias tb='tensorboard --logdir'
 
 # my_useful scripts
-export DEFAULT_REMOTE_HOST=''
+export DEFAULT_REMOTE_HOST='<DEFAULT_REMOTE_HOST>'
 export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
 export PATH="$MY_ENV_REPO/bin:$PATH"
 alias dscp='python $MY_ENV_REPO/my_useful/default_scp.py'
