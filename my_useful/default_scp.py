@@ -11,7 +11,7 @@ REMOTE_HOST = os.environ["DEFAULT_REMOTE_HOST"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument("src")
-parser.add_argument("dst")
+parser.add_argument("dst", nargs="?", default=os.getcwd())
 parser.add_argument(
     "-s",
     "--send",
