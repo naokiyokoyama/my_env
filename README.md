@@ -1,7 +1,7 @@
 # my_env
 Convenient scripts and configuration files meant for quick setup on a new machine.
 ## How to add aliases
-This script will pre-pend a block of code to your existing `~/.bash_aliases` file to define new aliases that won't overwrite existing ones. It will create this file if it doesn't exist, and for macOS, will make `~/.bash_profile` source it if it doesn't already do so. 
+This script will pre-pend a block of code to your existing `~/.bash_aliases` file to define new aliases without overwriting existing ones. It will create this file if it doesn't exist, and for macOS, will make `~/.bash_profile` source it if it doesn't already do so. 
 ```python
 python aliases/add_aliases.py
 ```
