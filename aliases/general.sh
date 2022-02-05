@@ -11,6 +11,7 @@ alias sba='source ~/.bash_aliases'
 alias eba='vim ~/.bash_aliases'
 alias essh='vim ~/.ssh/config'
 alias rp='realpath'
+alias rmrf='rm -rf'
 alias sl='ls'  # I always misspell this, so...
 lsgrep() {
   ls | grep $1
