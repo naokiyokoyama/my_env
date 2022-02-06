@@ -4,51 +4,79 @@ port.
 """
 
 import argparse
+import json
+import os.path as osp
 import random
 import socket
 import subprocess
 
+JSON_FILE = osp.abspath(__file__).replace(".py", ".json")
+if osp.isfile(JSON_FILE):
+    with open(JSON_FILE) as f:
+        json_data = json.load(f)
+else:
+    json_data = None
+
 parser = argparse.ArgumentParser()
 parser.add_argument("logdir")
-parser.add_argument(
-    "-l",
-    "--local_port",
-    type=int,
-    help="which port your local machine forwarded to the remote server when ssh-ing",
-)
-parser.add_argument(
-    "-u",
-    "--user",
-    help="the username you use on your local laptop/desktop you ssh'd from",
-)
 parser.add_argument(
     "-r",
     "--reconfigure",
     action="store_true",
-    help="use this flag to update info about local machine",
+    help="use this flag to update info about local machines",
+)
+parser.add_argument(
+    "-l",
+    "--local_port",
+    type=int,
+    help="override port to connect to on local machine in case RemoteForward fails",
+)
+parser.add_argument(
+    "-n",
+    "--nickname",
+    help="which local machine to connect to",
 )
 args = parser.parse_args()
 
-LOCAL_USERNAME = "<LOCAL_USERNAME>"
-LOCAL_PORT = "<LOCAL_PORT>"
+if json_data is None or args.reconfigure:
+    if json_data is None:
+        json_data = {}
+        print(f"First time setup! Initializing {JSON_FILE}...")
+    else:
+        print("--reconfigure was called!")
 
-if "<" in LOCAL_USERNAME or "<" in str(LOCAL_PORT) or args.reconfigure:
-    print(f"LOCAL_PORT and LOCAL_USERNAME currently undefined, or --reconfigure called")
-    local_user = input("Enter the username of your LOCAL machine (NOT this one): ")
+    # Ask for and gather info
+    local_user = input("Enter your USERNAME on your LOCAL machine (NOT this one): ")
     local_port = input("Enter RemoteForward port used to ssh to this machine: ")
-    with open(__file__) as f:
-        data = f.read()
-    new_data = []
-    for line in data.splitlines():
-        if line.startswith("LOCAL_USERNAME ="):
-            line = f"LOCAL_USERNAME = '{local_user}'"
-        elif line.startswith("LOCAL_PORT ="):
-            line = f"LOCAL_PORT = {local_port}"
-        new_data.append(line)
-    with open(__file__, "w") as f:
-        f.write("\n".join(new_data))
+    nickname = input("Enter a nickname for local machine: ")
+    default = ""
+    while default.lower() not in ["y", "n"]:
+        default = input("Set as default? [Y/n]: ")
+        if not default:
+            default = "y"
+    current_tb_executable = json_data.get("_tb_executable", "tensorboard")
+    tb_executable = input(
+        "Path to tensorboard executable (run 'which tensorboard' in a (conda) "
+        "environment that has tensorboard installed)"
+        f" (default: '{current_tb_executable}'): "
+    )
+    if not tb_executable:
+        tb_executable = current_tb_executable
+
+    # Save data to JSON
+    if not default.lower() == "n":
+        json_data["_default_local_machine"] = nickname
+    if nickname in json_data:
+        print(f"WARNING: Overwriting info for {nickname}")
+    json_data[nickname] = {
+        "local_user": local_user,
+        "local_port": local_port,
+    }
+    json_data["_tb_executable"] = tb_executable
+    with open(JSON_FILE, "w") as f:
+        json.dump(json_data, f, indent=4, sort_keys=True)
     print(
-        f"File {__file__} updated!\n"
+        f"File {JSON_FILE} updated!\n"
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
         f"PLEASE RUN: ssh-copy-id -p {local_port} {local_user}@localhost\n"
@@ -56,17 +84,29 @@ if "<" in LOCAL_USERNAME or "<" in str(LOCAL_PORT) or args.reconfigure:
         "(it will skip copying if key already exists on local machine.)\n"
         "If local machine is macOS, ENSURE THESE SETTINGS ARE SET:\n"
         "https://raw.githubusercontent.com/naokiyokoyama/my_env/main/imgs/mac_ssh.jpg\n"
+        "Then run this script again.\n"
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
         "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
     )
     exit()
 
-print(f"Local port: {LOCAL_PORT}\nLocal username: {LOCAL_USERNAME}")
-print(f"Run this script with --reconfigure if you want to update the above values")
-
-local_port = LOCAL_PORT if args.local_port is None else args.local_port
-user = LOCAL_USERNAME if args.user is None else args.user
-logdir = args.logdir
+# Load info about selected local machine
+nickname = (
+    json_data["_default_local_machine"] if args.nickname is None else args.nickname
+)
+local_user = json_data[nickname]["local_user"]
+local_port = (
+    json_data[nickname]["local_port"] if args.local_port is None else args.local_port
+)
+tb_executable = json_data["_tb_executable"]
+print(
+    f"tensorboard path: {tb_executable}\n"
+    f"Selected local machine: {nickname}\n"
+    f"Local port: {local_port}\nLocal username: {local_user}\n"
+    f"FYI, you currently have these local machines registered: "
+    f"{str([i for i in json_data.keys() if not i.startswith('_')])[1:-1]}\n"
+    f"Run this script with --reconfigure to update above values."
+)
 
 # Find an available port to host the tensorboard
 print("Searching for available port...")
@@ -93,13 +133,14 @@ try:
     out = subprocess.check_output("tmux ls", shell=True).decode("utf-8")
     existing_jobs = [line.split(":")[0] for line in out.splitlines() if "rssh_" in line]
     if existing_jobs:
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print("!!!!!!! WARNING !!!!!!!!!")
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print("You have existing tmux sessions created from this script:")
-        for j in existing_jobs:
-            print(j)
-        print()
+        jobs_as_str = ["\n".join(existing_jobs)]
+        print(
+            "!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+            "!!!!!!! WARNING !!!!!!!!!\n"
+            "!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+            "You have existing tmux sessions created from this script:"
+            f"{jobs_as_str}\n"
+        )
 except:
     pass
 
@@ -108,7 +149,7 @@ print("Connecting to local machine...")
 tmux_session_name = f"rssh_{tb_port}"
 cmd = (
     f"tmux new -s {tmux_session_name} -d "
-    f"ssh -R {tb_port}:localhost:{tb_port} -p {local_port} {user}@localhost  "
+    f"ssh -R {tb_port}:localhost:{tb_port} -p {local_port} {local_user}@localhost "
     '-o "StrictHostKeyChecking no"'
 )
 subprocess.check_call(cmd, shell=True)
@@ -119,7 +160,7 @@ print(f"Tensorboard will soon be available locally at: http://localhost:{tb_port
 print("Running tensorboard...\n")
 try:
     # Run tensorboard command
-    cmd = f"tensorboard  --port {tb_port} --logdir {logdir}"
+    cmd = f"{tb_executable}  --port {tb_port} --logdir {args.logdir}"
     print("Executing:\n", cmd)
     subprocess.check_call(cmd, shell=True)
 finally:
