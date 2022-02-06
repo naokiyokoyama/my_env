@@ -35,7 +35,7 @@ LOCAL_PORT = "<LOCAL_PORT>"
 if "<" in LOCAL_USERNAME or "<" in str(LOCAL_PORT) or args.reconfigure:
     print(f"LOCAL_PORT and LOCAL_USERNAME currently undefined, or --reconfigure called")
     local_user = input("Enter the username of your LOCAL machine (NOT this one): ")
-    local_port = input("Enter local port used with 'ssh -R' to ssh to this machine: ")
+    local_port = input("Enter RemoteForward port used to ssh to this machine: ")
     with open(__file__) as f:
         data = f.read()
     new_data = []
@@ -47,14 +47,18 @@ if "<" in LOCAL_USERNAME or "<" in str(LOCAL_PORT) or args.reconfigure:
         new_data.append(line)
     with open(__file__, "w") as f:
         f.write("\n".join(new_data))
-    print("File updated!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(f"PLEASE RUN: ssh-copy-id -p {local_port} {local_user}@localhost")
-    print("to enable port forwarding to local machine via pubkey auth.")
-    print("(it will skip copying if key already exists on local machine.)")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(
+        f"File {__file__} updated!\n"
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+        f"PLEASE RUN: ssh-copy-id -p {local_port} {local_user}@localhost\n"
+        "to enable port forwarding to local machine via pubkey auth.\n"
+        "(it will skip copying if key already exists on local machine.)\n"
+        "If local machine is macOS, ENSURE THESE SETTINGS ARE SET:\n"
+        "https://raw.githubusercontent.com/naokiyokoyama/my_env/main/imgs/mac_ssh.jpg\n"
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+    )
     exit()
 
 print(f"Local port: {LOCAL_PORT}\nLocal username: {LOCAL_USERNAME}")
@@ -80,7 +84,6 @@ if found:
 else:
     print("NO AVAILABLE PORTS?!?!?!?!?")
     exit()
-
 
 # Check for other tmux sessions this script may have made that didn't get killed
 # (should happen very rarely if at all), or if you just have another terminal with
