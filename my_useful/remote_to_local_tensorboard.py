@@ -32,7 +32,7 @@ args = parser.parse_args()
 LOCAL_USERNAME = "<LOCAL_USERNAME>"
 LOCAL_PORT = "<LOCAL_PORT>"
 
-if "<" in LOCAL_USERNAME or "<" in LOCAL_PORT or args.reconfigure:
+if "<" in LOCAL_USERNAME or "<" in str(LOCAL_PORT) or args.reconfigure:
     print(f"LOCAL_PORT and LOCAL_USERNAME currently undefined, or --reconfigure called")
     local_user = input("Enter the username of your LOCAL machine (NOT this one): ")
     local_port = input("Enter local port used with 'ssh -R' to ssh to this machine: ")
