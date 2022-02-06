@@ -46,6 +46,7 @@ alias dscp='python $MY_ENV_REPO/my_useful/default_scp.py'
 alias countint='python $MY_ENV_REPO/my_useful/count.py'
 alias repall='python $MY_ENV_REPO/my_useful/replace_all_in_file.py'
 alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
+alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
 cprp() {
     realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
 }

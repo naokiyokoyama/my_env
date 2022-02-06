@@ -4,7 +4,6 @@ port.
 """
 
 import argparse
-import os.path as osp
 import random
 import socket
 import subprocess
@@ -35,7 +34,7 @@ LOCAL_PORT = "<LOCAL_PORT>"
 
 if "<" in LOCAL_USERNAME or "<" in LOCAL_PORT or args.reconfigure:
     print(f"LOCAL_PORT and LOCAL_USERNAME currently undefined, or --reconfigure called")
-    local_user = input("Enter the username of your LOCAL machine (not this one): ")
+    local_user = input("Enter the username of your LOCAL machine (NOT this one): ")
     local_port = input("Enter local port used with 'ssh -R' to ssh to this machine: ")
     with open(__file__) as f:
         data = f.read()
@@ -44,19 +43,26 @@ if "<" in LOCAL_USERNAME or "<" in LOCAL_PORT or args.reconfigure:
         if line.startswith("LOCAL_USERNAME ="):
             line = f"LOCAL_USERNAME = '{local_user}'"
         elif line.startswith("LOCAL_PORT ="):
-            line = f"LOCAL_port = {local_port}"
+            line = f"LOCAL_PORT = {local_port}"
         new_data.append(line)
     with open(__file__, "w") as f:
         f.write("\n".join(new_data))
-    print("File updated! Please run this script again.")
+    print("File updated!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(f"PLEASE RUN: ssh-copy-id -p {local_port} {local_user}@localhost")
+    print("to enable port forwarding to local machine via pubkey auth.")
+    print("(it will skip copying if key already exists on local machine.)")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     exit()
 
 print(f"Local port: {LOCAL_PORT}\nLocal username: {LOCAL_USERNAME}")
 print(f"Run this script with --reconfigure if you want to update the above values")
 
-local_port = args.local_port
+local_port = LOCAL_PORT if args.local_port is None else args.local_port
+user = LOCAL_USERNAME if args.user is None else args.user
 logdir = args.logdir
-user = args.user
 
 # Find an available port to host the tensorboard
 print("Searching for available port...")
