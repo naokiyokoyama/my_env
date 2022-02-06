@@ -4,33 +4,55 @@ port.
 """
 
 import argparse
+import os.path as osp
+import random
 import socket
 import subprocess
-import random
-
-LOCAL_PORT = None
-LOCAL_USERNAME = ""
-
-if LOCAL_PORT is None or LOCAL_USERNAME == "":
-    print(f"Please update LOCAL_PORT and LOCAL_USERNAME in {__file__}")
-    exit()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("logdir")
 parser.add_argument(
     "-l",
     "--local_port",
-    default=LOCAL_PORT,
     type=int,
     help="which port your local machine forwarded to the remote server when ssh-ing",
 )
 parser.add_argument(
     "-u",
     "--user",
-    default=LOCAL_USERNAME,
     help="the username you use on your local laptop/desktop you ssh'd from",
 )
+parser.add_argument(
+    "-r",
+    "--reconfigure",
+    action="store_true",
+    help="use this flag to update info about local machine",
+)
 args = parser.parse_args()
+
+LOCAL_USERNAME = "<LOCAL_USERNAME>"
+LOCAL_PORT = "<LOCAL_PORT>"
+
+if "<" in LOCAL_USERNAME or "<" in LOCAL_PORT or args.reconfigure:
+    print(f"LOCAL_PORT and LOCAL_USERNAME currently undefined, or --reconfigure called")
+    local_user = input("Enter the username of your LOCAL machine (not this one): ")
+    local_port = input("Enter local port used with 'ssh -R' to ssh to this machine: ")
+    with open(__file__) as f:
+        data = f.read()
+    new_data = []
+    for line in data.splitlines():
+        if line.startswith("LOCAL_USERNAME ="):
+            line = f"LOCAL_USERNAME = '{local_user}'"
+        elif line.startswith("LOCAL_PORT ="):
+            line = f"LOCAL_port = {local_port}"
+        new_data.append(line)
+    with open(__file__, "w") as f:
+        f.write("\n".join(new_data))
+    print("File updated! Please run this script again.")
+    exit()
+
+print(f"Local port: {LOCAL_PORT}\nLocal username: {LOCAL_USERNAME}")
+print(f"Run this script with --reconfigure if you want to update the above values")
 
 local_port = args.local_port
 logdir = args.logdir
