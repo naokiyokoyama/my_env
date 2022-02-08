@@ -16,6 +16,9 @@ alias sl='ls'  # I always misspell this, so...
 lsgrep() {
   ls | grep $1
 }
+mkdircd() {
+    mkdir $1 && cd $1
+}
 
 # Conda
 alias ca='conda activate'
