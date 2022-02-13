@@ -2,6 +2,7 @@ import glob
 import os
 import os.path as osp
 import subprocess
+import time
 from sys import platform
 
 operating_systems = {
@@ -65,6 +66,20 @@ else:  # macOS
 with open(os_aliases) as f:
     added_aliases += f.read() + "\n"
 print(f"Loading OS-specific aliases from '{os_aliases}'...")
+
+# Add slurm aliases if desired
+add_slurm = ""
+while add_slurm.lower() not in ["y", "n"]:
+    add_slurm = input("Add slurm aliases? [y/N]: ")
+    if not add_slurm:
+        add_slurm = "n"
+if add_slurm == "y":
+    print("Adding slurm aliases...")
+    with open(osp.join(this_dir, "slurm.sh")) as f:
+        added_aliases += f.read() + "\n"
+else:
+    print("Not adding slurm aliases.")
+    time.sleep(0.5)
 
 # Replace environment variable with valid path to this repo
 my_env_repo = osp.dirname(this_dir)

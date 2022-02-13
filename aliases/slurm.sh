@@ -6,6 +6,6 @@ rscan() {
   python -c "import os; os.system('scancel ' + ' '.join([str(i) for i in range($1, $2+1)]))"
 }
 
-alias sbam='python $MY_ENV_REPO/my_useful/sbatch_glob.py'
-alias sbarg='python $MY_ENV_REPO/my_useful/sbatch_with_args.py'
-alias sbash='python $MY_ENV_REPO/my_useful/slurm_interactive_bash.py'
+alias sbam='python $MY_ENV_REPO/slurm/sbatch_glob.py'
+alias sbarg='python $MY_ENV_REPO/slurm/sbatch_with_args.py'
+alias sbash='python $MY_ENV_REPO/slurm/slurm_interactive_bash.py'
