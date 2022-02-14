@@ -75,7 +75,7 @@ while add_slurm.lower() not in ["y", "n"]:
         add_slurm = "n"
 if add_slurm == "y":
     slurm_aliases = osp.join(this_dir, "slurm.sh")
-    print(f"Loading OS-specific aliases from '{slurm_aliases}'...")
+    print(f"Loading slurm aliases from '{slurm_aliases}'...")
     with open(slurm_aliases) as f:
         added_aliases += f.read() + "\n"
 else:
