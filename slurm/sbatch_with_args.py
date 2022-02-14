@@ -46,10 +46,13 @@ def run(
         # Fill in $ values in template with permutation, where $0 is the name of the
         # file being generated with no extension
         data = template_data
+        for idx, arg in enumerate(p):
+            data = data.replace(f"${idx+1}", arg)
         out_name_no_ext, _ = osp.splitext(out_name)
-        out_name_no_ext = osp.basename(out_name_no_ext)
-        for idx, arg in enumerate([out_name_no_ext] + list(p)):
-            data = data.replace(f"${idx}", arg)
+        out_name_no_ext_base = osp.basename(out_name_no_ext)
+        data = data.replace("$BASE_NAME", out_name_no_ext_base)
+        data = data.replace("$FULL_NAME", out_name_no_ext)
+        data = data.replace("$THIS_DIR", osp.dirname(out_name))
 
         # Add paths for output and error if they don't exist in template. They will
         # be saved to the same folder as the template file with the same name as the
