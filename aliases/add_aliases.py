@@ -74,8 +74,9 @@ while add_slurm.lower() not in ["y", "n"]:
     if not add_slurm:
         add_slurm = "n"
 if add_slurm == "y":
-    print("Adding slurm aliases...")
-    with open(osp.join(this_dir, "slurm.sh")) as f:
+    slurm_aliases = osp.join(this_dir, "slurm.sh")
+    print(f"Loading OS-specific aliases from '{slurm_aliases}'...")
+    with open(slurm_aliases) as f:
         added_aliases += f.read() + "\n"
 else:
     print("Not adding slurm aliases.")
@@ -95,7 +96,10 @@ if osp.isfile(local_aliases_file):
 with open(local_aliases_file, "w") as f:
     f.write(added_aliases)
 
-print(f"Successfully pre-pended all aliases to '{local_aliases_file}'!")
+print(
+    f"Successfully pre-pended all aliases to '{local_aliases_file}'! "
+    "Your existing ones will thus not be overwritten."
+)
 
 bin_dir = osp.join(my_env_repo, "bin")
 for exe in glob.glob(osp.join(bin_dir, "*")):
