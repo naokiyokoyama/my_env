@@ -41,14 +41,31 @@ def run(
             out_name = template_name
             for idx, arg in enumerate(p):
                 out_name = out_name.replace(f"${idx + 1}", arg)
+        out_name = osp.abspath(out_name)
 
         # Fill in $ values in template with permutation, where $0 is the name of the
         # file being generated with no extension
         data = template_data
         out_name_no_ext, _ = osp.splitext(out_name)
         out_name_no_ext = osp.basename(out_name_no_ext)
-        for idx, arg in enumerate([out_name_no_ext] + p):
+        for idx, arg in enumerate([out_name_no_ext] + list(p)):
             data = data.replace(f"${idx}", arg)
+
+        # Add paths for output and error if they don't exist in template. They will
+        # be saved to the same folder as the template file with the same name as the
+        # generated sbatch file (with correct extension). Also add job name.
+        extra_params = []
+        if "#SBATCH --job-name" not in data:
+            job_name = osp.basename(osp.splitext(out_name)[0])
+            extra_params.append(f"#SBATCH --job-name={job_name}")
+        if "#SBATCH --output" not in data:
+            extra_params.append(f"#SBATCH --output={out_name[:-3] + '.out'}")
+        if "#SBATCH --error" not in data:
+            extra_params.append(f"#SBATCH --error={out_name[:-3] + '.err'}")
+        if extra_params:
+            data_lines = data.splitlines()
+            data_lines = [data_lines[0], *extra_params, *data_lines[1:]]
+            data = "\n".join(data_lines) + "\n"
 
         with open(out_name, "w") as f:
             f.write(data)
