@@ -24,6 +24,7 @@ def run(
     assert osp.isfile(sbatch_file), f"{sbatch_file} does not exist!"
     if template_name is not None:
         assert template_name.endswith(".sh")
+    sbatch_file = osp.abspath(sbatch_file)
 
     # Get data from template slurm file
     with open(sbatch_file) as f:
@@ -35,13 +36,14 @@ def run(
     for p_idx, p in enumerate(permutations):
         print("permutation: ", p)
         # Generate name for new file
+        src_dir = osp.dirname(sbatch_file)
         if template_name is None:
-            out_name = sbatch_file.replace(".sh", "_" + "_".join(p) + ".sh")
+            out_name = "_".join([sbatch_file[:-3], *p, ".sh"])
         else:
             out_name = template_name
             for idx, arg in enumerate(p):
                 out_name = out_name.replace(f"${idx + 1}", arg)
-        out_name = osp.abspath(out_name)
+            out_name = osp.join(src_dir, out_name)
 
         # Fill in $ values in template with permutation, where $0 is the name of the
         # file being generated with no extension
@@ -52,7 +54,7 @@ def run(
         out_name_no_ext_base = osp.basename(out_name_no_ext)
         data = data.replace("$BASE_NAME", out_name_no_ext_base)
         data = data.replace("$FULL_NAME", out_name_no_ext)
-        data = data.replace("$THIS_DIR", osp.dirname(out_name))
+        data = data.replace("$SRC_DIR", src_dir)
 
         # Add paths for output and error if they don't exist in template. They will
         # be saved to the same folder as the template file with the same name as the
