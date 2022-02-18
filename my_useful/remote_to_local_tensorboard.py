@@ -111,6 +111,7 @@ print(
 # Find an available port to host the tensorboard
 print("Searching for available port...")
 viz_ports = list(range(8000, 9001))
+random.seed(int(local_port))
 random.shuffle(viz_ports)
 found = False
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

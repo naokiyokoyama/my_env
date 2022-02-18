@@ -1,10 +1,10 @@
 # Remove hostname from command line prompt prefix, just use username.
 # Username will appear cyan in color. Conda env prefix recovered by env re-activation.
-PS1='\[\e[1;36m\]\u:\[\e[1;34m\]\w\[\e[0m\]$ '
-if [ ! -z "$CONDA_DEFAULT_ENV" ]
-then
-      conda activate $CONDA_DEFAULT_ENV
-fi
+#PS1='\[\e[1;36m\]\u:\[\e[1;34m\]\w\[\e[0m\]$ '
+#if [ ! -z "$CONDA_DEFAULT_ENV" ]
+#then
+#      conda activate $CONDA_DEFAULT_ENV
+#fi
 
 # General
 alias sba='source ~/.bash_aliases'
@@ -50,6 +50,7 @@ alias countint='python $MY_ENV_REPO/my_useful/count.py'
 alias repall='python $MY_ENV_REPO/my_useful/replace_all_in_file.py'
 alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
 alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
+alias pull_my_env='git -C $MY_ENV_REPO pull'
 cprp() {
     realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
 }
