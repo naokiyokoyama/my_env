@@ -3,13 +3,11 @@ Meant for use in skynet. You would have to change partition names for other
 SLURM clusters.
 """
 
-import os
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-n", "--job_name", default="bash", help="name to give job"
-)
+parser.add_argument("-n", "--job_name", default="bash", help="name to give job")
 parser.add_argument(
     "-c",
     "--num_cpus",
@@ -58,7 +56,7 @@ cmd = (
 )
 
 # Node to exclude
-exclude_nodes = os.environ.get("BLACK_LIST_NODES", [])
+exclude_nodes = os.environ.get("BLACK_LIST_NODES", "").split(",")
 if args.exclude is not None:
     exclude_nodes.extend(args.exclude.split(","))
 if len(exclude_nodes) > 0:

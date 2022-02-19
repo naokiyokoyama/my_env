@@ -11,7 +11,15 @@ def main():
     parser.add_argument("parameters", nargs="+")
     parser.add_argument("-g", "--generate-only", action="store_true")
     parser.add_argument("-t", "--template-name")
+    parser.add_argument("-a", "--auto-name")
     args = parser.parse_args()
+    if args.auto_name is not None:
+        params = args.auto_name.split(",")
+        params_str = "_".join([f"{p}${idx+1}" for idx, p in enumerate(params)])
+        grandparent_dir = osp.basename(
+            osp.dirname(osp.dirname(osp.abspath(args.sbatch_file)))
+        )
+        args.template_name = f"{grandparent_dir}_{params_str}.sh"
     run(**vars(args))
 
 
@@ -20,6 +28,7 @@ def run(
     parameters,
     generate_only=False,
     template_name=None,
+    **kwargs,
 ):
     assert osp.isfile(sbatch_file), f"{sbatch_file} does not exist!"
     if template_name is not None:
