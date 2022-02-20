@@ -60,7 +60,7 @@ exclude_nodes = os.environ.get("BLACK_LIST_NODES", "").split(",")
 if args.exclude is not None:
     exclude_nodes.extend(args.exclude.split(","))
 if len(exclude_nodes) > 0:
-    cmd += f" --exclude {exclude_nodes}"
+    cmd += f" --exclude {','.join(exclude_nodes)}"
 
 # Which slurm partition to use
 if args.overcap:
