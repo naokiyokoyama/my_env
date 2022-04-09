@@ -37,6 +37,7 @@ alias tmuxs='tmux new -s'
 alias tmuxa='tmux attach -t'
 alias tmuxl='tmux ls'
 alias tmuxk='tmux kill-session -t'
+alias tmux_rename='tmux rename-session -t'
 
 # Other
 alias tb='tensorboard --logdir'
