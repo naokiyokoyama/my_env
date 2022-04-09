@@ -47,6 +47,7 @@ export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
 export PATH="$MY_ENV_REPO/bin:$PATH"
 alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
 alias pull_my_env='git -C $MY_ENV_REPO pull'
+alias regenerate_executables="python $MY_ENV_REPO/aliases/generate_executables.py"
 cprp() {
     realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
 }
