@@ -2,6 +2,8 @@
 Takes in one or two args. Prints integers from arg1 to arg2 on new lines.
 Arg1 is 0 if only one arg is provided.
 """
+ALIAS = "countint"
+
 import sys
 
 if len(sys.argv[1:]) == 1:

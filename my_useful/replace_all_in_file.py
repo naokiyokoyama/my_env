@@ -1,9 +1,11 @@
+ALIAS = "repall"
+
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('file_path')
-parser.add_argument('str_to_replace')
-parser.add_argument('str_to_replace_with')
+parser.add_argument("file_path")
+parser.add_argument("str_to_replace")
+parser.add_argument("str_to_replace_with")
 args = parser.parse_args()
 
 with open(args.file_path) as f:
@@ -12,7 +14,7 @@ with open(args.file_path) as f:
 occurrences = data.count(args.str_to_replace)
 data = data.replace(args.str_to_replace, args.str_to_replace_with)
 
-with open(args.file_path, 'w') as f:
+with open(args.file_path, "w") as f:
     f.write(data)
 
 print(

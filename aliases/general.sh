@@ -45,11 +45,7 @@ alias tb='tensorboard --logdir'
 export DEFAULT_REMOTE_HOST='<DEFAULT_REMOTE_HOST>'
 export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
 export PATH="$MY_ENV_REPO/bin:$PATH"
-alias dscp='python $MY_ENV_REPO/my_useful/default_scp.py'
-alias countint='python $MY_ENV_REPO/my_useful/count.py'
-alias repall='python $MY_ENV_REPO/my_useful/replace_all_in_file.py'
 alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
-alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
 alias pull_my_env='git -C $MY_ENV_REPO pull'
 cprp() {
     realpath $1 | pbcopy && echo 'Copied:' `realpath $1`

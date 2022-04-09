@@ -3,6 +3,8 @@ Execute scp using a default remote host so you don't have to type it out.
 By default, the first arg represents the remote path (src) and the second arg represents
 the local path (dst). You can use -s to reverse this.
 """
+ALIAS = "dscp"
+
 import argparse
 import os
 import subprocess

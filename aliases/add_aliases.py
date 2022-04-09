@@ -5,6 +5,8 @@ import subprocess
 import time
 from sys import platform
 
+from generate_executables import generate_executables
+
 operating_systems = {
     "linux": "ubuntu",
     "darwin": "macOS",
@@ -13,9 +15,15 @@ assert platform in operating_systems, "Can't determine operating system!"
 
 op_sys = operating_systems[platform]
 print("Detected operating system:", op_sys)
-if input("Is this correct? [y/n]: ") != "y":
+correct_os = ""
+while correct_os.lower() not in ["y", "n"]:
+    correct_os = input("Is this correct? [Y/n]: ")
+    if not correct_os:
+        correct_os = "y"
+if correct_os == "n":
     print("Aborting.")
     exit()
+
 
 header = "# >>> BEGINNING OF THINGS ADDED BY my_env REPO>>>\n"
 footer = "\n# <<< END OF THINGS ADDED BY my_env REPO<<<\n"
@@ -105,3 +113,5 @@ bin_dir = osp.join(my_env_repo, "bin")
 for exe in glob.glob(osp.join(bin_dir, "*")):
     subprocess.check_call(f"chmod +x {exe}".split())
 print(f"Successfully made all scripts in '{bin_dir}' executable! Added to PATH.")
+
+generate_executables()

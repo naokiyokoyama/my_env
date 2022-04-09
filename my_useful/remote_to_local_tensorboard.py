@@ -2,6 +2,7 @@
 Connects an available port to your local machine and then runs tensorboard on that
 port.
 """
+ALIAS = "tbr"
 
 import argparse
 import json
