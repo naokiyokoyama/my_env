@@ -20,5 +20,6 @@ for i in args.files:
     if args.query in data:
         print(i + ":")
         subprocess.check_call(
-            f"cat {i} | grep -B {args.before} -A {args.after} {args.query}".split()
+            f"cat {i} | grep -B {args.before} -A {args.after} {args.query}",
+            shell=True,
         )
