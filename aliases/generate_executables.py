@@ -32,6 +32,8 @@ def generate_executables():
             bin_basename = data.split("ALIAS = ")[-1].split("\n")[0].replace('"', "")
         else:
             bin_basename = osp.basename(script)[:-3]
+        if bin_basename == "IGNORE":
+            continue
         bin_file = osp.join(bin_dir, bin_basename)
         shutil.copyfile(script, bin_file)
         with open(bin_file, "w") as f:
