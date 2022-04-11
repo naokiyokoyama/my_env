@@ -6,6 +6,8 @@ import subprocess
 
 import tqdm
 
+PROTECTED_BINS = ["pbcopy", "notify"]
+
 
 def generate_executables():
     python = osp.join(osp.dirname(os.environ["CONDA_EXE"]), "python")
@@ -15,9 +17,8 @@ def generate_executables():
 
     # Erase existing executables
     for i in glob.glob(osp.join(bin_dir, "*")):
-        if "pbcopy" in i:
-            continue
-        os.remove(i)
+        if not any([pb in i for pb in PROTECTED_BINS]):
+            os.remove(i)
 
     # Make all scripts executable
     scripts = glob.glob(osp.join(scripts_dir, "*.py"))
