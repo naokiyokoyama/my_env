@@ -10,4 +10,4 @@ cmd = (
 )
 
 subprocess.check_call(cmd, shell=True)
-print(f"Push notification [{sentence}] sent to app.")
+print(f"Push notification [{' '.join(words)}] sent to app.")
