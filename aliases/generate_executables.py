@@ -40,7 +40,9 @@ def generate_executables():
         with open(bin_file, "w") as f:
             f.write(data)
 
-        cmd = f"chmod +x {bin_file}"
+    # Make all scripts executable
+    for exe in glob.glob(osp.join(bin_dir, "*")):
+        cmd = f"chmod +x {exe}"
         subprocess.check_call(cmd, shell=True)
 
 
