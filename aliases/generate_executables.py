@@ -6,7 +6,7 @@ import subprocess
 
 import tqdm
 
-PROTECTED_BINS = ["pbcopy", "notify"]
+PROTECTED_BINS = ["pbcopy"]
 
 
 def generate_executables():
