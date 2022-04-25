@@ -44,7 +44,7 @@ sort_idx = 0 if args.upscale else -1
 prev_frames = [None] * len(videos)
 for _ in tqdm.trange(int(output_frame_count)):
     new_frames = [v.read() for v in videos]
-    frames = [n[1] if n[0] else p for n, p in zip(new_frames, prev_frames)]
+    frames = [new if ret else p for (ret, new), p in zip(new_frames, prev_frames)]
 
     largest_dim = sorted([f.shape[dim_idx] for f in frames])[sort_idx]
     new_dim = [0, 0]
