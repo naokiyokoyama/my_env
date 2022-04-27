@@ -3,7 +3,7 @@ import subprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument("glob_string")
-parser.add_argument("count")
+parser.add_argument("count", type=int)
 args = parser.parse_args()
 
 assert "*" in args.glob_string
