@@ -1,5 +1,6 @@
 import argparse
-import subprocess
+import glob
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument("glob_string")
@@ -8,12 +9,8 @@ args = parser.parse_args()
 
 assert "*" in args.glob_string
 
-subprocess.check_call(
-    f"files=( {args.glob_string} );"
-    "$num_files=${#files[@]};"
-    f"while [ $num_files -lt {args.count} ]; do sleep 10;"
-    f"files=( {args.glob_string} );"
-    "$num_files=${#files[@]};"
-    "echo $num_files files currently.;"
-    "done"
-)
+count = len(glob.glob(args.glob_string))
+while count < args.count:
+    count = len(glob.glob(args.glob_string))
+    print("Current count:", count)
+    time.sleep(10)
