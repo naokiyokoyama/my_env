@@ -22,7 +22,6 @@ def generate_executables():
 
     # Make all scripts executable
     scripts = glob.glob(osp.join(scripts_dir, "*.py"))
-    # for script in scripts:
     for script in tqdm.tqdm(scripts):
         # Add executable path to the top of file
         with open(script) as f:
