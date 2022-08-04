@@ -10,10 +10,9 @@ copy_cmd = (
 
 
 def main(src, dst, exclude):
-    if ":" not in src:
-        host = os.environ.get("DEFAULT_REMOTE_HOST", "")
-        assert host != "", "Default host ($DEFAULT_REMOTE_HOST) has not been set!"
-        src = f"{host}:" + src
+    # Undo tilde conversion
+    src = src.replace(os.environ["HOME"], "~")
+    dst = dst.replace(os.environ["HOME"], "~")
     if exclude != "":
         exclude = "--exclude=" + exclude.replace(",", " --exclude=")
     cmd = copy_cmd.format(exclude=exclude, src=src, dst=dst)
