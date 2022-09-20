@@ -1,0 +1,18 @@
+import argparse
+
+from moviepy.editor import VideoFileClip, concatenate_videoclips
+
+
+def main(videos, out_path):
+    clips = [VideoFileClip(v) for v in videos]
+    clip = concatenate_videoclips(clips, method="compose")
+    clip.write_videofile(out_path, fps=30)
+    print(f"Saved output video to {out_path}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("videos", nargs="+")
+    parser.add_argument("-o", "--out-path", default="out.mp4")
+    args = parser.parse_args()
+    main(args.videos, args.out_path)
