@@ -9,6 +9,8 @@ def main(videos, out_path):
         out_path = "concatenated_out.mp4"
     clips = [VideoFileClip(v) for v in videos]
     clip = concatenate_videoclips(clips, method="compose")
+    # Replace extension with mp4
+    out_path = osp.splitext(out_path)[0] + ".mp4"
     clip.write_videofile(out_path, fps=30)
     print(f"Saved output video to {out_path}")
 

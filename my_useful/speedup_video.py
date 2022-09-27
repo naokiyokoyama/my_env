@@ -10,6 +10,8 @@ def main(video, speedup, out_path):
     clip = VideoFileClip(video)
     clip = clip.fx(vfx.speedx, speedup)
     out_path = f"{speedup}_{out_path}"
+    # Replace extension with mp4
+    out_path = osp.splitext(out_path)[0] + ".mp4"
     clip.write_videofile(out_path, fps=30)
     print(f"Saved output video to {out_path}")
 

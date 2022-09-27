@@ -7,6 +7,10 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 def main(video, out_path, start, end):
     if out_path is None:
         out_path = osp.basename(f"{start}_{end}_{video}")
+
+    # Replace extension with mp4
+    out_path = osp.splitext(out_path)[0] + ".mp4"
+
     clip = VideoFileClip(video)
     trimmed_clip = clip.subclip(start, end)
     trimmed_clip.write_videofile(out_path, fps=30)
