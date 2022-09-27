@@ -6,7 +6,7 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 def main(videos, out_path):
     if out_path is None:
-        out_path = osp.basename(video)
+        out_path = osp.basename("concatenated_out.mp4")
     clips = [VideoFileClip(v) for v in videos]
     clip = concatenate_videoclips(clips, method="compose")
     clip.write_videofile(out_path, fps=30)
