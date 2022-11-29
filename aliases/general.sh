@@ -31,6 +31,9 @@ alias gitc='git commit -m'
 alias gitp='git push'
 alias gits='git status'
 alias gitd='git diff'
+gpush() {
+  git add -u && git commit -m "${1}" && git push
+}
 
 # tmux
 alias tmuxs='tmux new -s'
