@@ -34,6 +34,15 @@ alias gitd='git diff'
 gpush() {
   git add -u && git commit -m "${1}" && git push
 }
+gstash_file() {
+  # Assert two args were given
+  if [ -z "$2" ]
+  then
+      echo "Please provide two args: file and message"
+      return
+  fi
+  git stash push -m "${2}" ${1}
+}
 
 # tmux
 alias tmuxs='tmux new -s'
