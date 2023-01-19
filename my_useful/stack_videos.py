@@ -102,4 +102,4 @@ if __name__ == "__main__":
         help="Path to output video file (default: stacked.mp4)",
     )
     args = parser.parse_args()
-    stacked_frame = stack_videos(args.video_files, args.horizontal, args.out_path)
+    stack_videos(args.video_files, args.horizontal, args.out_path)
