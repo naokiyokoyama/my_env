@@ -3,80 +3,57 @@ Meant for use in skynet. You would have to change partition names for other
 SLURM clusters.
 """
 
-import argparse
 import os
+import sys
+from typing import Any
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-n", "--job_name", default="bash", help="name to give job")
-parser.add_argument(
-    "-c",
-    "--num_cpus",
-    type=int,
-    default=6,
-    help="number of cpus to allocate to the job",
-)
-parser.add_argument(
-    "-x",
-    "--exclude",
-    help="list of nodes to avoid, separated by commas",
-)
-parser.add_argument(
-    "-w",
-    "--want",
-    default="",
-    help="name of node that you want to run the job on",
-)
-parser.add_argument(
-    "-p", "--partition", type=str, default="short", help="partition to run the job on"
-)
-parser.add_argument(
-    "-u",
-    "--user-overcap",
-    action="store_true",
-    help="indicates submission to user-overcap partition",
-)
-parser.add_argument(
-    "-o",
-    "--overcap",
-    action="store_true",
-    help="indicates submission to overcap partition",
-)
-parser.add_argument(
-    "-q",
-    "--quadro",
-    action="store_true",
-    help="indicates desire to use a node with Quadro cards",
-)
-args = parser.parse_args()
 
-cmd = (
-    "srun --gres gpu:1 --nodes 1"
-    f" --cpus-per-task {args.num_cpus}"
-    f" --job-name {args.job_name}"
-)
+def get_arg(args: list, choices: list, default: Any):
+    for i in choices:
+        if i in args:
+            # Return all the other args
+            remaining = args[: args.index(i)] + args[args.index(i) + 2 :]
+            return args[args.index(i) + 1], remaining
+    return default, args
 
-# Node to exclude
-exclude_nodes = os.environ.get("BLACK_LIST_NODES", "").split(",")
-if args.exclude is not None:
-    exclude_nodes.extend(args.exclude.split(","))
-if len(exclude_nodes) > 0:
-    cmd += f" --exclude {','.join(exclude_nodes)}"
 
-# Which slurm partition to use
-if args.overcap:
-    cmd += " --account overcap --partition overcap"
-elif args.user_overcap:
-    cmd += " --partition user-overcap"
-else:
-    cmd += f" --partition {args.partition}"
+def print_help():
+    print(
+        "Usage: python slurm_interactive_bash.py [options]"
+        "Some helpful options:"
+        "  -c, --cpus-per-task: number of cpus per task (default: 6)"
+        "  -J, --job-name: name of the job (default: bash)"
+        "  -C, --constraint: type of gpu (default: any)"
+        "  -p, --partition: partition to use (default: debug)"
+        "  -x, --exclude: nodes to avoid (default: $BLACKLIST_NODES)"
+    )
+    exit(0)
 
-if args.want != "":
-    cmd += f" -w {args.want}"
 
-if args.quadro:
-    cmd += f" --constraint claptrap,glados,olivaw,oppy,sophon,zima"
+def main():
+    args = sys.argv[1:]
+    num_cpus, args = get_arg(args, ["-c", "--cpus-per-task"], 6)
+    job_name, args = get_arg(args, ["-J", "--job-name"], "bash")
+    partition, args = get_arg(args, ["-p", "--partition"], "debug")
+    exclude_nodes, args = get_arg(args, ["-x", "--exclude"], "")
+    exclude_nodes = exclude_nodes.split(",") + os.environ.get(
+        "BLACK_LIST_NODES", ""
+    ).split(",")
+    exclude_nodes = ",".join(exclude_nodes)
 
-cmd += " --pty bash"
+    cmd = (
+        "srun --gres gpu:1 --nodes 1"
+        f" --cpus-per-task {num_cpus}"
+        f" --job-name {job_name}"
+        f" --partition {partition}"
+        f" --exclude {exclude_nodes}"
+        f" {' '.join(args)}"
+        " --pty bash"
+    )
+    print("Executing:")
+    print(cmd)
+    os.system(cmd)
 
-print("Executing: ", cmd)
-os.system(cmd)
+
+if __name__ == "__main__":
+    main()
