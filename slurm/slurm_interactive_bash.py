@@ -32,6 +32,8 @@ def print_help():
 
 def main():
     args = sys.argv[1:]
+    if "-h" in args or "--help" in args:
+        print_help()
     num_cpus, args = get_arg(args, ["-c", "--cpus-per-task"], 6)
     job_name, args = get_arg(args, ["-J", "--job-name"], "bash")
     partition, args = get_arg(args, ["-p", "--partition"], "debug")
