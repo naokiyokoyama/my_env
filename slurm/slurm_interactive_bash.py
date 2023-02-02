@@ -37,10 +37,10 @@ def main():
     num_cpus, args = get_arg(args, ["-c", "--cpus-per-task"], 6)
     job_name, args = get_arg(args, ["-J", "--job-name"], "bash")
     partition, args = get_arg(args, ["-p", "--partition"], "debug")
-    exclude_nodes, args = get_arg(args, ["-x", "--exclude"], "")
-    exclude_nodes = exclude_nodes.split(",") + os.environ.get(
-        "BLACK_LIST_NODES", ""
-    ).split(",")
+    exclude_nodes, args = get_arg(args, ["-x", "--exclude"], [])
+    if isinstance(exclude_nodes, str):
+        exclude_nodes = exclude_nodes.split(",")
+    exclude_nodes += os.environ.get("BLACK_LIST_NODES", "").split(",")
     exclude_nodes = ",".join(exclude_nodes)
 
     cmd = (
