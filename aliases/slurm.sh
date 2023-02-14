@@ -15,3 +15,15 @@ cd_sbatch () {
   sbatch $1
   cd - # go back to the original dir
 }
+sbase() {
+  # Change job name to the basename of the current directory
+  base=$(basename $PWD)
+  sbatch --job-name $base $1
+}
+cd_sbase() {
+  # Change job name to the basename of the current directory
+  base=$(basename $PWD)
+  cd $(dirname $1) # cd into the parent dir of $1 file path
+  sbatch --job-name $base $1
+  cd - # go back to the original dir
+}
