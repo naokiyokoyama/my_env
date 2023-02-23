@@ -12,7 +12,7 @@ alias sbarg='python $MY_ENV_REPO/slurm/sbatch_with_args.py'
 alias sbash='python $MY_ENV_REPO/slurm/slurm_interactive_bash.py'
 cd_sbatch () {
   cd $(dirname $1) # cd into the parent dir of $1 file path
-  sbatch $1
+  sbatch $(basename $1)
   cd - # go back to the original dir
 }
 sbase() {
