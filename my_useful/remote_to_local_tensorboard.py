@@ -26,6 +26,7 @@ def main(logdir, reconfigure, local_port, nickname, tmp_dir):
     if tmp_dir is None:
         logdir = logdir[0]
     else:
+        logdir = [osp.abspath(i) for i in logdir]
         # Generate a symlink for each logdir in tmp_dir
         symlinks = shorten_paths(
             [dirname.lstrip("/").rstrip("/") for dirname in logdir]
