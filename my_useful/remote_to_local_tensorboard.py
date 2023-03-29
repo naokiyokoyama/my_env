@@ -56,6 +56,29 @@ def main(logdir, reconfigure, local_port, nickname, tmp_dir):
         f"Run this script with --reconfigure to update above values."
     )
 
+    # Check for other tmux sessions this script may have made that didn't get killed
+    # (should happen very rarely, if at all), or if you just have another terminal with
+    # this script running in it. This will error if no tmux sessions are active yet,
+    # so we wrap it in a try except.
+    used_ports = []
+    try:
+        out = subprocess.check_output("tmux ls", shell=True).decode("utf-8")
+        existing_jobs = [
+            line.split(":")[0] for line in out.splitlines() if "rssh_" in line
+        ]
+        used_ports = [int(i.split("_")[-1]) for i in existing_jobs]
+        if existing_jobs:
+            jobs_as_str = "\n".join(existing_jobs)
+            print(
+                "!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+                "!!!!!!! WARNING !!!!!!!!!\n"
+                "!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+                "You have existing tmux sessions created from this script:\n"
+                f"{jobs_as_str}\n"
+            )
+    except:
+        pass
+
     # Find an available port to host the tensorboard
     print("Searching for available port...")
     viz_ports = list(range(8000, 9001))
@@ -64,7 +87,7 @@ def main(logdir, reconfigure, local_port, nickname, tmp_dir):
     found = False
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         for p in viz_ports:
-            if s.connect_ex(("localhost", p)) != 0:
+            if s.connect_ex(("localhost", p)) != 0 and p not in used_ports:
                 tb_port = p
                 found = True
                 break
@@ -73,27 +96,6 @@ def main(logdir, reconfigure, local_port, nickname, tmp_dir):
     else:
         print("NO AVAILABLE PORTS?!?!?!?!?")
         exit()
-
-    # Check for other tmux sessions this script may have made that didn't get killed
-    # (should happen very rarely if at all), or if you just have another terminal with
-    # this script running in it. This will error if no tmux sessions are active yet,
-    # so we wrap it in a try except.
-    try:
-        out = subprocess.check_output("tmux ls", shell=True).decode("utf-8")
-        existing_jobs = [
-            line.split(":")[0] for line in out.splitlines() if "rssh_" in line
-        ]
-        if existing_jobs:
-            jobs_as_str = ["\n".join(existing_jobs)]
-            print(
-                "!!!!!!!!!!!!!!!!!!!!!!!!!\n"
-                "!!!!!!! WARNING !!!!!!!!!\n"
-                "!!!!!!!!!!!!!!!!!!!!!!!!!\n"
-                "You have existing tmux sessions created from this script:"
-                f"{jobs_as_str}\n"
-            )
-    except:
-        pass
 
     # Forward the tensorboard port back to local machine in the background
     print("Connecting to local machine...")
@@ -185,8 +187,10 @@ def shorten_paths(path_list):
                     return list_of_lists
             for i in range(len(list_of_lists)):
                 list_of_lists[i] = list_of_lists[i][1:]
+        return list_of_lists
 
     path_list_list = filter_list_of_lists([path.split("/") for path in path_list])
+    print([path.split("/") for path in path_list])
     new_path_list = ["/".join(path) for path in path_list_list]
     return new_path_list
 
