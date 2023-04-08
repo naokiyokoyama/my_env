@@ -3,7 +3,7 @@ import sys
 
 words = sys.argv[1:]
 sentence = "+".join(words)
-sentence = sentence.replace(" ", "+")
+sentence = sentence.replace(" ", "+").replace("[", "_").replace("]", "_")
 
 cmd = (
     f"curl -s -o /dev/null "
