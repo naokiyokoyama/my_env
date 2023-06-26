@@ -22,10 +22,10 @@ mkdircd() {
 
 # Conda
 ca() {
-  if [[ "$CONDA_DEFAULT_ENV" != "1" ]]; then
-    conda activate "$env_name"
+  if [ "$CONDA_DEFAULT_ENV" != "$1" ]; then
+    conda activate "$1"
   else
-    echo "Conda environment $env_name is already active."
+    echo "Conda environment $1 is already active."
   fi
 }
 alias condad='conda deactivate'
