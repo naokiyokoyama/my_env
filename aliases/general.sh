@@ -62,7 +62,19 @@ alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
 alias pull_my_env='git -C $MY_ENV_REPO pull'
 alias regenerate_executables="python $MY_ENV_REPO/aliases/generate_executables.py"
 alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
+
+# pbcopy aliases
 cprp() {
-    realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
+  realpath $1 | pbcopy && echo 'Copied:' `realpath $1`
 }
+pbcat() {
+  cat $1 | pbcopy
+}
+pbwhich() {
+  which $1 | pbcopy
+}
+peeb() {
+  echo $1 | pbcopy
+}
+
 . $MY_ENV_REPO/my_useful/z.sh
