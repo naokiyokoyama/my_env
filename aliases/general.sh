@@ -21,7 +21,7 @@ mkdircd() {
 }
 
 # Conda
-alias ca() {
+ca() {
   if [[ "$CONDA_DEFAULT_ENV" != "1" ]]; then
     conda activate "$env_name"
   else
