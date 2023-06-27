@@ -56,6 +56,19 @@ alias tmuxa='tmux attach -t'
 alias tmuxl='tmux ls'
 alias tmuxk='tmux kill-session -t'
 alias tmux_rename='tmux rename-session -t'
+kill_tmux_sessions() {
+    local session_prefix=$1
+
+    # Get the list of all running tmux sessions
+    local sessions=$(tmux ls -F "#{session_name}")
+
+    # Iterate over the sessions and kill the ones that match the prefix
+    for session in $sessions; do
+        if [[ $session == $session_prefix* ]]; then
+            tmux kill-session -t "$session"
+        fi
+    done
+}
 
 # Other
 alias tb='tensorboard --logdir'
