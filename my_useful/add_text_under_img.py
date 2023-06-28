@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-def add_text_to_image(image, text):
+def add_text_to_image(image: np.ndarray, text: str) -> np.ndarray:
     width = image.shape[1]
     text_image = generate_text_image(width, text)
     combined_image = np.vstack(image, text_image)
@@ -10,7 +10,7 @@ def add_text_to_image(image, text):
     return combined_image
 
 
-def generate_text_image(width, text):
+def generate_text_image(width: int, text: str) -> np.ndarray:
     # Define the parameters for the text
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 0.8
