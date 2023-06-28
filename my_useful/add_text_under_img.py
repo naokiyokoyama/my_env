@@ -3,6 +3,16 @@ import numpy as np
 
 
 def add_text_to_image(image: np.ndarray, text: str) -> np.ndarray:
+    """
+    Adds text to the given image.
+
+    Args:
+        image (np.ndarray): Input image.
+        text (str): Text to be added.
+
+    Returns:
+        np.ndarray: Image with text added.
+    """
     width = image.shape[1]
     text_image = generate_text_image(width, text)
     combined_image = np.vstack(image, text_image)
@@ -11,6 +21,16 @@ def add_text_to_image(image: np.ndarray, text: str) -> np.ndarray:
 
 
 def generate_text_image(width: int, text: str) -> np.ndarray:
+    """
+    Generates an image of the given text with line breaks, honoring given width.
+
+    Args:
+        width (int): Width of the image.
+        text (str): Text to be drawn.
+
+    Returns:
+        np.ndarray: Text drawn on white image with the given width.
+    """
     # Define the parameters for the text
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 0.8
