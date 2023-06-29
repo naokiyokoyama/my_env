@@ -15,7 +15,7 @@ def add_text_to_image(image: np.ndarray, text: str) -> np.ndarray:
     """
     width = image.shape[1]
     text_image = generate_text_image(width, text)
-    combined_image = np.vstack(image, text_image)
+    combined_image = np.vstack([image, text_image])
 
     return combined_image
 
