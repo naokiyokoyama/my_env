@@ -33,7 +33,7 @@ def iterate_commands(file_path: str, cmd: str) -> None:
     with open(file_path, "r") as file:
         for line in file:
             line = line.strip()
-            if line:
+            if line and not line.startswith("#"):  # Skip lines that start with '#'
                 args = line.split("|")
                 assert cmd.count("{}") == len(
                     args
