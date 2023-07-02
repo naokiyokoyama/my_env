@@ -1,27 +1,27 @@
 import argparse
 import subprocess
+from typing import List
 
 
-def execute_command(cmd, args_list):
+def execute_command(cmd: str, args_list: List[str]) -> None:
     """
     Executes the command with the given arguments.
 
     Args:
         cmd (str): The command string to execute.
-        args_list (list): The arguments to pass to the command.
+        args_list (List[str]): The arguments to pass to the command.
 
     Returns:
-        int: The return code of the executed command.
+        None
     """
     command = cmd.format(*args_list)
-    return subprocess.call(command, shell=True)
+    subprocess.check_call(command, shell=True)
 
 
-def iterate_commands(file_path, cmd):
+def iterate_commands(file_path: str, cmd: str) -> None:
     """
     Iterates through each line in the file, splits the line using '|', and executes the
-    command with the splitted
-    elements as arguments.
+    command with the split elements as arguments.
 
     Args:
         file_path (str): The path to the input file.
