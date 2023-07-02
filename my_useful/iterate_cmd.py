@@ -14,6 +14,7 @@ def execute_command(cmd: str, args_list: List[str]) -> None:
     Returns:
         None
     """
+    print(args_list)
     command = cmd.format(*args_list)
     subprocess.check_call(command, shell=True)
 
