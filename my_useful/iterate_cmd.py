@@ -17,7 +17,7 @@ def execute_command(cmd: str, args_list: List[str], silent=False) -> None:
     if not silent:
         print(args_list)
     command = cmd.format(*args_list)
-    subprocess.check_call(command, shell=True)
+    subprocess.run(command, shell=True, check=False)
 
 
 def iterate_commands(file_path: str, cmd: str, silent: bool = False) -> None:
