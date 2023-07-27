@@ -29,12 +29,18 @@ if __name__ == "__main__":
         description="Find the first file that matches a given pattern."
     )
     parser.add_argument("pattern", type=str, help="The pattern to match.")
-    parser.add_argument("path", type=str, help="The path to search in.")
+    parser.add_argument(
+        "path",
+        type=str,
+        nargs="?",
+        default=".",
+        help="The path to search in. Defaults to current directory if not provided.",
+    )
     args = parser.parse_args()
 
     # usage
     match = find_first_match(args.pattern, args.path)
     if match:
-        print(f"First match: {match}")
+        print(match)
     else:
         print("No match found")
