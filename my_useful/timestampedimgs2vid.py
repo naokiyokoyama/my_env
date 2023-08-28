@@ -1,14 +1,17 @@
+#! /Users/naoki/mambaforge/bin/python
 import glob
 import os
 from typing import List
 
-from moviepy.editor import ImageSequenceClip, concatenate_videoclips
+from moviepy.editor import concatenate_videoclips, ImageClip
+from PIL import Image
+import numpy as np
 
 
 def main(images_dir: str):
     """Generates a video from a sequence of images.
 
-    Takes in a directory containing a sequence of images named with timestamps 
+    Takes in a directory containing a sequence of images named with timestamps
     (e.g. from time.time()). Sorts the images by timestamp, converts the timestamps
     to durations in seconds, and generates a video by concatenating clips of each
     image with the corresponding duration.
@@ -91,10 +94,27 @@ def generate_video_from_images(
         durations
     ), "img_paths and durations must have the same length"
 
-    # Create a clip for each image with its corresponding duration
+    # Find the dimensions of the smallest image
+    smallest_width = float("inf")
+    smallest_height = float("inf")
+
+    for img_path in img_paths:
+        img = Image.open(img_path)
+        width, height = img.size
+        smallest_width = min(smallest_width, width)
+        smallest_height = min(smallest_height, height)
+
+    # Resize all images to the dimensions of the smallest image
+    resized_images = []
+    for img_path in img_paths:
+        img = Image.open(img_path)
+        resized_img = img.resize((smallest_width, smallest_height))
+        resized_images.append(resized_img)
+
+    # Create a clip for each resized image with its corresponding duration
     clips = [
-        ImageSequenceClip([img_path], durations=[duration])
-        for img_path, duration in zip(img_paths, durations)
+        ImageClip(np.array(resized_img)).set_duration(duration)
+        for resized_img, duration in zip(resized_images, durations)
     ]
 
     # Concatenate the clips into a single video
