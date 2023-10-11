@@ -54,17 +54,27 @@ gstash_file() {
 alias tmuxs='tmux new -s'
 alias tmuxa='tmux attach -t'
 alias tmuxl='tmux ls'
-alias tmuxk='tmux kill-session -t'
 alias tmux_rename='tmux rename-session -t'
-kill_tmux_sessions() {
-    local session_prefix=$1
+tmuxk {  # Provide one or more session names to kill
+  for session_name in "$@"; do
+    tmux kill-session -t "$session_name"
+  done
+}
+tmuxk_wildcard() {  # e.g., kill_tmux_wildcard "*mysession*"
+    local session_pattern=$1
+
+    # Ensure that a pattern was provided
+    if [[ -z "$session_pattern" ]]; then
+        echo "Usage: $0 <session_pattern>"
+        return 1
+    fi
 
     # Get the list of all running tmux sessions
     local sessions=$(tmux ls -F "#{session_name}")
 
-    # Iterate over the sessions and kill the ones that match the prefix
+    # Iterate over the sessions and kill the ones that match the pattern
     for session in $sessions; do
-        if [[ $session == $session_prefix* ]]; then
+        if [[ $session == $session_pattern ]]; then
             tmux kill-session -t "$session"
         fi
     done
