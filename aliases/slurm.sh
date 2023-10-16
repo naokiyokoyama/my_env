@@ -1,5 +1,22 @@
 alias sq='squeue -u $USER --sort=P,i,t,+j --format "%.12i %.9P %.45j %.2t %.10M %R"'
-alias scan='scancel'
+scan() {
+    # Cancels the given job ids and removes the corresponding .slurm_job files,
+    # if they exist.
+    # Don't worry if you don't have the directory '~/slurm_poll_stuck_jobs'
+    #
+    # Usage:
+    #   scan <jobid1> <jobid2> ...
+    # Example:
+    #   scan 1234 5678 91011
+
+    # First, run scancel for each argument
+    scancel "$@"
+
+    # Then, remove the corresponding .slurm_job files from the directory
+    for jobid in "$@"; do
+        rm -f ~/slurm_poll_stuck_jobs/${jobid}.slurm_job
+    done
+}
 
 # Supposed to stand for "scancel range". Given two job_ids, it will try to cancel
 # both job_ids and all ids in between.
