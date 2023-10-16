@@ -102,6 +102,9 @@ pbcat() {
 pbwhich() {
   which $1 | pbcopy
 }
+pbls () {
+  ls $1 | pbcopy
+}
 peeb() {
   echo $1 | pbcopy
 }
