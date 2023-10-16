@@ -55,7 +55,7 @@ alias tmuxs='tmux new -s'
 alias tmuxa='tmux attach -t'
 alias tmuxl='tmux ls'
 alias tmux_rename='tmux rename-session -t'
-tmuxk {  # Provide one or more session names to kill
+tmuxk() {  # Provide one or more session names to kill
   for session_name in "$@"; do
     tmux kill-session -t "$session_name"
   done
