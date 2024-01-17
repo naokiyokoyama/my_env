@@ -27,6 +27,7 @@ def print_help():
         "  -p, --partition: partition to use (default: overcap)"
         "  -x, --exclude: nodes to avoid (default: $BLACKLIST_NODES)"
         "  --qos: Quality of Service (default: debug)"
+        "  -g, --gpu-type: type of gpu (default: any)"
     )
     exit(0)
 
@@ -39,10 +40,12 @@ def main():
     job_name, args = get_arg(args, ["-J", "--job-name"], "bash")
     partition, args = get_arg(args, ["-p", "--partition"], "overcap")
     exclude_nodes, args = get_arg(args, ["-x", "--exclude"], [])
+    gpu_type, args = get_arg(args, ["-g", "--gpu-type"], "any")
     if isinstance(exclude_nodes, str):
         exclude_nodes = exclude_nodes.split(",")
     exclude_nodes += os.environ.get("BLACK_LIST_NODES", "").split(",")
     exclude_nodes = ",".join(exclude_nodes)
+    gpus = f"{gpu_type}:1".replace('any:', '')
 
     cmd = (
         "salloc --nodes 1"
@@ -50,7 +53,7 @@ def main():
         f" --cpus-per-task {num_cpus}"
         f" --job-name {job_name}"
         f" --partition {partition}"
-        f" --gpus 1"
+        f" --gpus {gpus}"
         f" --exclude {exclude_nodes}"
         f" {' '.join(args)}"
     )
