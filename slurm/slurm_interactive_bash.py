@@ -24,8 +24,9 @@ def print_help():
         "  -c, --cpus-per-task: number of cpus per task (default: 6)"
         "  -J, --job-name: name of the job (default: bash)"
         "  -C, --constraint: type of gpu (default: any)"
-        "  -p, --partition: partition to use (default: debug)"
+        "  -p, --partition: partition to use (default: overcap)"
         "  -x, --exclude: nodes to avoid (default: $BLACKLIST_NODES)"
+        "  --qos: Quality of Service (default: debug)"
     )
     exit(0)
 
@@ -36,7 +37,7 @@ def main():
         print_help()
     num_cpus, args = get_arg(args, ["-c", "--cpus-per-task"], 6)
     job_name, args = get_arg(args, ["-J", "--job-name"], "bash")
-    partition, args = get_arg(args, ["-p", "--partition"], "debug")
+    partition, args = get_arg(args, ["-p", "--partition"], "overcap")
     exclude_nodes, args = get_arg(args, ["-x", "--exclude"], [])
     if isinstance(exclude_nodes, str):
         exclude_nodes = exclude_nodes.split(",")
@@ -44,13 +45,14 @@ def main():
     exclude_nodes = ",".join(exclude_nodes)
 
     cmd = (
-        "srun --gres gpu:1 --nodes 1"
+        "salloc --nodes 1"
+        f" --qos debug"
         f" --cpus-per-task {num_cpus}"
         f" --job-name {job_name}"
         f" --partition {partition}"
+        f" --gpus 1"
         f" --exclude {exclude_nodes}"
         f" {' '.join(args)}"
-        " --pty bash"
     )
     print("Executing:")
     print(cmd)
