@@ -12,3 +12,15 @@ Use the `-h` flag to learn about what args each script needs.
 - `video2gif.py` - converts video to gif (useful for Google Slides)
 - `speedup_video.py` - creates faster copy of video (removes sound)
 - `count.py` - just prints out numbers from `int1` to `int2` each on a new line (OK not too useful, but sometimes useful when composing repetitive commands in a text editor) 
+
+
+## Apps to install
+- Jumpcut
+- Rectangle
+- Mini-Calendar
+- iTerm
+- Sublime Text
+- PyCharm
+- Chrome
+- Handbrake
+- Karabiner-Elements
