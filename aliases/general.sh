@@ -108,5 +108,14 @@ pbls () {
 peeb() {
   echo $1 | pbcopy
 }
+pt() {  # for pasting to a file
+    if [ $# -eq 0 ]; then
+        echo "Usage: pt <filepath>"
+        return 1
+    fi
+    
+    filepath="$1"
+    cat > "$filepath"
+}
 
 . $MY_ENV_REPO/my_useful/z.sh
