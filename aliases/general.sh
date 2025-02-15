@@ -55,12 +55,14 @@ alias tmuxs='tmux new -s'
 alias tmuxa='tmux attach -t'
 alias tmuxl='tmux ls'
 alias tmux_rename='tmux rename-session -t'
+
 tmuxk() {  # Provide one or more session names to kill
   for session_name in "$@"; do
     tmux kill-session -t "$session_name"
   done
 }
-tmuxk_wildcard() {  # e.g., kill_tmux_wildcard "*mysession*"
+
+tmuxk_glob() {  # e.g., tmuxk_glob "*mysession*"
     local session_pattern=$1
 
     # Ensure that a pattern was provided
@@ -78,6 +80,22 @@ tmuxk_wildcard() {  # e.g., kill_tmux_wildcard "*mysession*"
             tmux kill-session -t "$session"
         fi
     done
+}
+
+tmux_interrupt() {  # Send Ctrl + C to a tmux. Good for timed self-destruction.
+    if [ -z "$1" ]; then
+        echo "Usage: tmux_interrupt <session_name>"
+        return 1
+    fi
+    tmux send-keys -t "$1" C-c
+}
+
+tmux_run() {  # Sends a command to for a given session to run. Good for automated execution.
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "Usage: tmux_run <session_name> <command>"
+        return 1
+    fi
+    tmux send-keys -t "$1" "$2" Enter
 }
 
 # Other
