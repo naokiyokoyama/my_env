@@ -101,6 +101,64 @@ tmux_run() {  # Sends a command to for a given session to run. Good for automate
 # Other
 alias tb='tensorboard --logdir'
 
+wait_for_output() {
+    # Function to wait until a command's output contains a specific string
+    # Usage: wait_for_output "command" "expected_string" [timeout_seconds] [interval_seconds]
+    
+    # Example usage:
+    # wait_for_output "docker ps" "healthy" 60 5  # Wait up to 1 minute, checking every 5 seconds
+    # wait_for_output "curl http://localhost:8080/health" "ready"  # Use default timeout and interval
+    
+    local command="$1"
+    local expected="$2"
+    local timeout=${3:-300}  # Default timeout: 5 minutes
+    local interval=${4:-2}   # Default check interval: 2 seconds
+    local start_time=$(date +%s)
+    
+    if [[ -z "$command" || -z "$expected" ]]; then
+        echo "Error: Both command and expected string are required" >&2
+        echo "Usage: wait_for_output \"command\" \"expected_string\" [timeout_seconds] [interval_seconds]" >&2
+        return 1
+    fi
+    
+    echo "Waiting for output containing: $expected"
+    echo "Command: $command"
+    echo "Timeout: ${timeout}s, Interval: ${interval}s"
+    
+    while true; do
+        # Run the command and capture its output
+        local output
+        output=$(eval "$command" 2>&1)
+        local exit_code=$?
+        
+        # Check if the command failed
+        if [[ $exit_code -ne 0 ]]; then
+            echo "Error: Command failed with exit code $exit_code" >&2
+            echo "Command output: $output" >&2
+            return $exit_code
+        fi
+        
+        # Check if the expected string is in the output
+        if echo "$output" | grep -q "$expected"; then
+            echo "Found expected output!"
+            echo "$output"
+            return 0
+        fi
+        
+        # Check if we've exceeded the timeout
+        local current_time=$(date +%s)
+        local elapsed=$((current_time - start_time))
+        
+        if [[ $elapsed -ge $timeout ]]; then
+            echo "Error: Timeout after ${timeout} seconds" >&2
+            echo "Last output: $output" >&2
+            return 124  # Standard timeout exit code
+        fi
+        
+        sleep "$interval"
+    done
+}
+
 # my_useful scripts
 export DEFAULT_REMOTE_HOST='<DEFAULT_REMOTE_HOST>'
 export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
