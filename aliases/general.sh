@@ -13,6 +13,9 @@ alias essh='vim ~/.ssh/config'
 alias rp='realpath'
 alias rmrf='rm -rf'
 alias sl='ls'  # I always misspell this, so...
+alias ls='ls --color=auto'
+
+
 lsgrep() {
   ls | grep $1
 }
