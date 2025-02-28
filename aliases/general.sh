@@ -15,7 +15,6 @@ alias rmrf='rm -rf'
 alias sl='ls'  # I always misspell this, so...
 alias ls='ls --color=auto'
 
-
 lsgrep() {
   ls | grep $1
 }
@@ -99,6 +98,14 @@ tmux_run() {  # Sends a command to for a given session to run. Good for automate
         return 1
     fi
     tmux send-keys -t "$1" "$2" Enter
+}
+
+tmux_enter() {  # Sends an Enter key to a given tmux session
+    if [ -z "$1" ]; then
+        echo "Usage: tmux_enter <session_name>"
+        return 1
+    fi
+    tmux send-keys -t "$1" Enter
 }
 
 # Other
