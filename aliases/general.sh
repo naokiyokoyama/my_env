@@ -113,27 +113,25 @@ alias tb='tensorboard --logdir'
 
 wait_for_output() {
     # Function to wait until a command's output contains a specific string
-    # Usage: wait_for_output "command" "expected_string" [timeout_seconds] [interval_seconds]
+    # Usage: wait_for_output "command" "expected_string"
     
     # Example usage:
-    # wait_for_output "docker ps" "healthy" 60 5  # Wait up to 1 minute, checking every 5 seconds
-    # wait_for_output "curl http://localhost:8080/health" "ready"  # Use default timeout and interval
+    # wait_for_output "docker ps" "healthy"
+    # wait_for_output "curl http://localhost:8080/health" "ready"
     
     local command="$1"
     local expected="$2"
-    local timeout=${3:-300}  # Default timeout: 5 minutes
-    local interval=${4:-2}   # Default check interval: 2 seconds
+    local interval=2   # Check interval: 2 seconds
     local start_time=$(date +%s)
     
     if [[ -z "$command" || -z "$expected" ]]; then
         echo "Error: Both command and expected string are required" >&2
-        echo "Usage: wait_for_output \"command\" \"expected_string\" [timeout_seconds] [interval_seconds]" >&2
+        echo "Usage: wait_for_output \"command\" \"expected_string\"" >&2
         return 1
     fi
     
     echo "Waiting for output containing: $expected"
     echo "Command: $command"
-    echo "Timeout: ${timeout}s, Interval: ${interval}s"
     
     while true; do
         # Run the command and capture its output
@@ -153,16 +151,6 @@ wait_for_output() {
             echo "Found expected output!"
             echo "$output"
             return 0
-        fi
-        
-        # Check if we've exceeded the timeout
-        local current_time=$(date +%s)
-        local elapsed=$((current_time - start_time))
-        
-        if [[ $elapsed -ge $timeout ]]; then
-            echo "Error: Timeout after ${timeout} seconds" >&2
-            echo "Last output: $output" >&2
-            return 124  # Standard timeout exit code
         fi
         
         sleep "$interval"
