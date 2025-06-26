@@ -173,6 +173,17 @@ cprp() {
 pbcat() {
   cat $1 | pbcopy
 }
+pbcatn() {
+  # Group the commands so their combined output is piped to pbcopy
+  {
+    # 1. Get the basename of the file, add a colon, and print a newline
+    basename "$1" | tr -d '\n' # Get basename and remove its trailing newline
+    echo ":"                    # Print the colon and a final newline
+    
+    # 2. Catenate the actual file content
+    cat "$1"
+  } | pbcopy
+}
 pbwhich() {
   which $1 | pbcopy
 }
