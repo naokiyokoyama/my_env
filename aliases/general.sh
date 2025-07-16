@@ -6,6 +6,11 @@
 #      conda activate $CONDA_DEFAULT_ENV
 #fi
 
+# set a fancy prompt (non-color, unless we know we "want" color); explicitly includes tmux sessions
+case "$TERM" in
+    xterm-color*|*-256color|screen*|tmux*) color_prompt=yes;;
+esac
+
 # General
 alias sba='source ~/.bash_aliases'
 alias eba='vim ~/.bash_aliases'
