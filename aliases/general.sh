@@ -20,6 +20,10 @@ alias rmrf='rm -rf'
 alias sl='ls'  # I always misspell this, so...
 alias ls='ls --color=auto'
 
+lnrp() {
+  ln -s "$(realpath "$1")" "$2"
+}
+
 lsgrep() {
   ls | grep $1
 }
