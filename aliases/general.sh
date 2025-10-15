@@ -19,6 +19,7 @@ alias rp='realpath'
 alias rmrf='rm -rf'
 alias sl='ls'  # I always misspell this, so...
 alias ls='ls --color=auto'
+alias p9f='pkill -9 -f'
 
 lnrp() {
   ln -s "$(realpath "$1")" "$2"
