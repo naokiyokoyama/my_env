@@ -4,8 +4,6 @@ import os.path as osp
 import shutil
 import subprocess
 
-import tqdm
-
 PROTECTED_BINS = ["pbcopy"]
 
 
@@ -22,7 +20,7 @@ def generate_executables():
 
     # Make all scripts executable
     scripts = glob.glob(osp.join(scripts_dir, "*.py"))
-    for script in tqdm.tqdm(scripts):
+    for script in scripts:
         # Add executable path to the top of file
         with open(script) as f:
             data = f"#! {python}\n" + f.read()
