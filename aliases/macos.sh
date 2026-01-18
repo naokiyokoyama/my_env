@@ -6,6 +6,7 @@ export HISTCONTROL=ignoredups
 
 # Re-source the bash_profile
 alias sbr='source ~/.bash_profile'
+alias ebr='vim ~/.bash_profile'
 
 # HEIC to JPG file converter. Example: h2j *.HEIC
 alias h2j='magick mogrify -monitor -format jpg'
