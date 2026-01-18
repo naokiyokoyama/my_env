@@ -2,12 +2,37 @@ import argparse
 import glob
 import os
 import os.path as osp
+import re
 import subprocess
 import time
 import sys
 from sys import platform
 
 from generate_executables import generate_executables
+
+
+def detect_previous_choices():
+    """Detect previous choices from existing .bash_aliases file."""
+    home_dir = osp.join(os.environ["HOME"])
+    local_aliases_file = osp.join(home_dir, ".bash_aliases")
+
+    add_slurm = "n"
+    default_host = ""
+
+    if osp.isfile(local_aliases_file):
+        with open(local_aliases_file) as f:
+            data = f.read()
+
+        # Detect slurm by checking for unique slurm alias
+        if "alias sq='squeue" in data:
+            add_slurm = "y"
+
+        # Extract DEFAULT_REMOTE_HOST value
+        match = re.search(r"export DEFAULT_REMOTE_HOST='([^']*)'", data)
+        if match:
+            default_host = match.group(1)
+
+    return add_slurm, default_host
 
 
 def main(args):
@@ -128,11 +153,22 @@ def main(args):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--add-slurm", "-s", default="n")
-        parser.add_argument("--default-host", "-d", default="")
-        args = parser.parse_args()
-    else:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--add-slurm", "-s", default="n")
+    parser.add_argument("--default-host", "-d", default="")
+    parser.add_argument(
+        "--auto", "-a", action="store_true",
+        help="Automatically detect previous choices from existing .bash_aliases"
+    )
+    args = parser.parse_args()
+
+    if args.auto:
+        detected_slurm, detected_host = detect_previous_choices()
+        args.add_slurm = detected_slurm
+        args.default_host = detected_host
+        print(f"Auto-detected settings: slurm={detected_slurm}, default_host='{detected_host}'")
+    elif len(sys.argv) == 1:
+        # No arguments provided, run interactively
         args = None
+
     main(args)

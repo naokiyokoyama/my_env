@@ -194,6 +194,7 @@ export PATH="$MY_ENV_REPO/bin:$PATH"
 alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
 alias pull_my_env='git -C $MY_ENV_REPO pull'
 alias regenerate_executables="python $MY_ENV_REPO/aliases/generate_executables.py"
+alias update_myenv_aliases="python $MY_ENV_REPO/aliases/add_aliases.py --auto"
 alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
 
 # pbcopy aliases
