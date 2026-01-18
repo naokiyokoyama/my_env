@@ -64,9 +64,29 @@ gstash_file() {
 
 # tmux
 alias tmuxs='tmux new -s'
-alias tmuxa='tmux attach -t'
 alias tmuxl='tmux ls'
 alias tmux_rename='tmux rename-session -t'
+
+tmuxa() {
+  # If a session name is provided, attach to that session
+  if [ -n "$1" ]; then
+    tmux attach -t "$1"
+    return
+  fi
+
+  # Count the number of running sessions
+  local session_count=$(tmux ls 2>/dev/null | wc -l)
+
+  # If there's exactly one session, attach to it
+  if [ "$session_count" -eq 1 ]; then
+    tmux attach
+  elif [ "$session_count" -eq 0 ]; then
+    echo "No tmux sessions running"
+  else
+    echo "Multiple sessions running. Please specify one:"
+    tmux ls
+  fi
+}
 
 tmuxk() {  # Provide one or more session names to kill
   for session_name in "$@"; do
