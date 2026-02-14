@@ -3,12 +3,17 @@ import os
 import os.path as osp
 import shutil
 import subprocess
+import sys
 
 PROTECTED_BINS = ["pbcopy"]
 
 
 def generate_executables():
-    python = osp.join(osp.dirname(os.environ["CONDA_EXE"]), "python")
+    # Use conda python if available, otherwise fall back to system python
+    if "CONDA_EXE" in os.environ:
+        python = osp.join(osp.dirname(os.environ["CONDA_EXE"]), "python")
+    else:
+        python = sys.executable
     my_env_dir = osp.dirname(osp.dirname(osp.abspath(__file__)))
     scripts_dir = osp.join(my_env_dir, "my_useful")
     bin_dir = osp.join(my_env_dir, "bin")
