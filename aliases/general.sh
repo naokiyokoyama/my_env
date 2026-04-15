@@ -138,6 +138,29 @@ tmux_enter() {  # Sends an Enter key to a given tmux session
     tmux send-keys -t "$1" Enter
 }
 
+# Zellij aliases
+zr() {
+    if [ "$#" -eq 2 ]; then
+        # Renames a specific session: zr <old-name> <new-name>
+        zellij --session "$1" action rename-session "$2"
+        echo "✅ Session '$1' renamed to '$2'"
+    elif [ "$#" -eq 1 ]; then
+        # Renames the current session: zr <new-name>
+        zellij action rename-session "$1"
+        echo "✅ Current session renamed to '$1'"
+    else
+        echo "Usage: zr [old-name] <new-name>"
+    fi
+}
+
+# Keep the others as standard aliases
+alias zs='zellij --session'
+alias za='zellij attach'
+alias zl='zellij list-sessions'
+alias zq='zellij --layout quad'
+alias zk='zellij kill-session'
+alias zka='zellij kill-all-sessions'
+
 # Other
 alias tb='tensorboard --logdir'
 
@@ -195,6 +218,7 @@ alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
 alias pull_my_env='git -C $MY_ENV_REPO pull'
 alias regenerate_executables="python $MY_ENV_REPO/aliases/generate_executables.py"
 alias update_myenv_aliases="python $MY_ENV_REPO/aliases/add_aliases.py --auto"
+alias deploy_configs='bash $MY_ENV_REPO/configs/deploy_configs.sh'
 alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
 
 # pbcopy aliases

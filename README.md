@@ -5,6 +5,14 @@ This script will pre-pend a block of code to your existing `~/.bash_aliases` fil
 ```python
 python aliases/add_aliases.py
 ```
+## How to deploy config files
+Config files for tmux, vim, wezterm, zellij, etc. are stored in `configs/`. To symlink them to their expected locations:
+```bash
+bash configs/deploy_configs.sh              # deploy all configs
+bash configs/deploy_configs.sh --only zellij  # deploy only zellij configs
+```
+After running `add_aliases.py`, you can also use: `deploy_configs`
+
 ## Useful scripts
 Use the `-h` flag to learn about what args each script needs.
 - `replace_all_in_file.py` - can be called using `repall` alias added by this repo. Given a file, replaces all occurrences of `str1` with `str2`.
