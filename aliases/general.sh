@@ -215,9 +215,10 @@ export DEFAULT_REMOTE_HOST='<DEFAULT_REMOTE_HOST>'
 export MY_ENV_REPO='<MY_ENV_REPO>'  # filled in by add_aliases.py
 export PATH="$MY_ENV_REPO/bin:$PATH"
 alias cpwd="pwd | pbcopy && echo 'Copied:' `pwd`"
-alias pull_my_env='git -C $MY_ENV_REPO pull'
+update_env() {
+    git -C "$MY_ENV_REPO" pull && python "$MY_ENV_REPO/aliases/add_aliases.py" "$@"
+}
 alias regenerate_executables="python $MY_ENV_REPO/aliases/generate_executables.py"
-alias update_myenv_aliases="python $MY_ENV_REPO/aliases/add_aliases.py --auto"
 alias deploy_configs='bash $MY_ENV_REPO/configs/deploy_configs.sh'
 alias tbr='python $MY_ENV_REPO/my_useful/remote_to_local_tensorboard.py'
 
