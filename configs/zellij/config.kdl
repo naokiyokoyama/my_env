@@ -180,3 +180,6 @@ plugins {
 
 default_layout "quad"
 mouse_mode true
+session_serialization true
+pane_viewport_serialization true
+scrollback_lines_to_serialize 0
