@@ -14,7 +14,8 @@ keybinds {
         bind "Alt a" { MoveFocus "Left"; }
         bind "Alt d" { MoveFocus "Right"; }
 
-        // UNBINDING Alt + Arrows to fix your macOS word-jumping
+        // UNBINDING keys that conflict with macOS word-jumping
+        unbind "Alt f"
         unbind "Alt Left"
         unbind "Alt Right"
         unbind "Alt Up"
