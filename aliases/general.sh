@@ -67,6 +67,11 @@ alias tmuxs='tmux new -s'
 alias tmuxl='tmux ls'
 alias tmux_rename='tmux rename-session -t'
 
+tks() {
+  read -p "Kill tmux server? [y/N] " answer
+  [[ "$answer" == [yY] ]] && tmux kill-server
+}
+
 tmuxa() {
   # If a session name is provided, attach to that session
   if [ -n "$1" ]; then
