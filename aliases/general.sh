@@ -68,6 +68,10 @@ alias tmuxl='tmux ls'
 alias tmux_rename='tmux rename-session -t'
 
 tks() {
+  if [[ "$1" == "-y" ]]; then
+    tmux kill-server
+    return
+  fi
   read -p "Kill tmux server? [y/N] " answer
   [[ "$answer" == [yY] ]] && tmux kill-server
 }
