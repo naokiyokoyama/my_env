@@ -172,6 +172,7 @@ alias zka='zellij kill-all-sessions'
 
 # Other
 alias tb='tensorboard --logdir'
+alias cdsp='claude --dangerously-skip-permissions'
 
 wait_for_output() {
     # Function to wait until a command's output contains a specific string
